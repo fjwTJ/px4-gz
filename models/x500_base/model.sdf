@@ -1,6 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sdf version='1.9'>
   <model name='x500_base'>
+  <!-- ================== LW20 雷达，固定在碳板上 ================== -->
+<link name="lidar_sensor_link">
+  <!-- Pose 相对于 base_link，贴合碳板位置 -->
+  <pose relative_to="base_link">0.047 0.001 0.055 1 0 1.57</pose> <!-- z略高板面1.2cm -->
+
+  <!-- 惯性属性 -->
+  <inertial>
+    <mass>0.02</mass>
+    <inertia>
+      <ixx>0.000004</ixx>
+      <iyy>0.000004</iyy>
+      <izz>0.000002</izz>
+      <ixy>0</ixy>
+      <ixz>0</ixz>
+      <iyz>0</iyz>
+    </inertia>
+  </inertial>
+
+  <!-- 可视化模型 -->
+  <visual name="lidar_visual">
+    <geometry>
+      <mesh>
+        <uri>model://LW20/meshes/LW20.dae</uri>
+      </mesh>
+    </geometry>
+  </visual>
+
+  <!-- 碰撞体 -->
+  <collision name="lidar_collision">
+    <geometry>
+      <box>
+        <size>0.03 0.02 0.043</size>
+      </box>
+    </geometry>
+  </collision>
+
+  <!-- GPU LiDAR 传感器 -->
+<sensor name="front_lidar" type="gpu_lidar">
+  <gz_frame_id>lidar_sensor_link</gz_frame_id>
+  <update_rate>50</update_rate>
+
+  <ray>
+    <scan>
+      <horizontal>
+        <samples>360</samples>
+        <min_angle>-1.57</min_angle>
+        <max_angle>1.57</max_angle>
+      </horizontal>
+      <vertical>
+        <samples>1</samples>
+        <min_angle>0</min_angle>
+        <max_angle>0</max_angle>
+      </vertical>
+    </scan>
+
+    <range>
+      <min>0.2</min>
+      <max>20</max>
+      <resolution>0.01</resolution>
+    </range>
+  </ray>
+
+  <always_on>1</always_on>
+  <visualize>true</visualize>
+</sensor>
+</link>
+
+<!-- 固定 joint，雷达随无人机移动 -->
+<joint name="lidar_joint" type="fixed">
+  <parent>base_link</parent>
+  <child>lidar_sensor_link</child>
+  <pose>0 0 0 0 0 0</pose>
+</joint>
+<!-- ================== LW20 雷达结束 ================== -->
     <pose>0 0 .24 0 0 0</pose>
     <self_collide>false</self_collide>
     <static>false</static>
