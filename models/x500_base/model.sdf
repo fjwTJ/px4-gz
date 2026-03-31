@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sdf version='1.9'>
   <model name='x500_base'>
-  <!-- ================== LW20 雷达，固定在碳板上 ================== -->
+<!-- ================== LW20 雷达，64线3D扫描安装在无人机正前方 ================== -->
 <link name="lidar_sensor_link">
-  <!-- Pose 相对于 base_link，贴合碳板位置 -->
-  <pose relative_to="base_link">0.047 0.001 0.055 1 0 1.57</pose> <!-- z略高板面1.2cm -->
+  <!-- Pose 相对于 base_link，放在无人机正前方并略向下倾 -->
+  <pose relative_to="base_link">0.08 0 0.05 0 -0.1 0</pose>
 
   <!-- 惯性属性 -->
   <inertial>
@@ -37,93 +37,35 @@
     </geometry>
   </collision>
 
-  <!-- GPU LiDAR 传感器 -->
-<sensor name="front_lidar" type="gpu_lidar">
-  <gz_frame_id>lidar_sensor_link</gz_frame_id>
-  <update_rate>50</update_rate>
+  <!-- GPU LiDAR 传感器，64线3D扫描 -->
+  <sensor name="front_lidar" type="gpu_lidar">
+    <gz_frame_id>lidar_sensor_link</gz_frame_id>
+    <update_rate>50</update_rate>
 
-  <ray>
-    <scan>
-      <horizontal>
-        <samples>360</samples>
-        <min_angle>-1.57</min_angle>
-        <max_angle>1.57</max_angle>
-      </horizontal>
-      <vertical>
-        <samples>1</samples>
-        <min_angle>0</min_angle>
-        <max_angle>0</max_angle>
-      </vertical>
-    </scan>
+    <ray>
+      <scan>
+        <horizontal>
+          <samples>360</samples> <!-- 水平360°扫描 -->
+          <min_angle>-3.14</min_angle> <!-- -180° -->
+          <max_angle>3.14</max_angle>  <!-- 180° -->
+        </horizontal>
+        <vertical>
+          <samples>64</samples> <!-- 垂直64线形成3D扫描 -->
+          <min_angle>-0.35</min_angle> <!-- -20°，向下可见地面 -->
+          <max_angle>0.35</max_angle>  <!-- +20°，向上可见障碍 -->
+        </vertical>
+      </scan>
 
-    <range>
-      <min>0.2</min>
-      <max>20</max>
-      <resolution>0.01</resolution>
-    </range>
-  </ray>
+      <range>
+        <min>0.2</min>
+        <max>20</max>
+        <resolution>0.01</resolution>
+      </range>
+    </ray>
 
-  <always_on>1</always_on>
-  <visualize>true</visualize>
-</sensor>
-<sensor name="lidar_imu_sensor" type="imu">
-  <always_on>1</always_on>
-  <update_rate>250</update_rate>
-  <imu>
-    <angular_velocity>
-      <x>
-        <noise type="gaussian">
-          <mean>0</mean>
-          <stddev>0.00018665</stddev>
-          <dynamic_bias_stddev>3.8785e-05</dynamic_bias_stddev>
-          <dynamic_bias_correlation_time>1000</dynamic_bias_correlation_time>
-        </noise>
-      </x>
-      <y>
-        <noise type="gaussian">
-          <mean>0</mean>
-          <stddev>0.00018665</stddev>
-          <dynamic_bias_stddev>3.8785e-05</dynamic_bias_stddev>
-          <dynamic_bias_correlation_time>1000</dynamic_bias_correlation_time>
-        </noise>
-      </y>
-      <z>
-        <noise type="gaussian">
-          <mean>0</mean>
-          <stddev>0.00018665</stddev>
-          <dynamic_bias_stddev>3.8785e-05</dynamic_bias_stddev>
-          <dynamic_bias_correlation_time>1000</dynamic_bias_correlation_time>
-        </noise>
-      </z>
-    </angular_velocity>
-    <linear_acceleration>
-      <x>
-        <noise type="gaussian">
-          <mean>0</mean>
-          <stddev>0.00186</stddev>
-          <dynamic_bias_stddev>0.006</dynamic_bias_stddev>
-          <dynamic_bias_correlation_time>300</dynamic_bias_correlation_time>
-        </noise>
-      </x>
-      <y>
-        <noise type="gaussian">
-          <mean>0</mean>
-          <stddev>0.00186</stddev>
-          <dynamic_bias_stddev>0.006</dynamic_bias_stddev>
-          <dynamic_bias_correlation_time>300</dynamic_bias_correlation_time>
-        </noise>
-      </y>
-      <z>
-        <noise type="gaussian">
-          <mean>0</mean>
-          <stddev>0.00186</stddev>
-          <dynamic_bias_stddev>0.006</dynamic_bias_stddev>
-          <dynamic_bias_correlation_time>300</dynamic_bias_correlation_time>
-        </noise>
-      </z>
-    </linear_acceleration>
-  </imu>
-</sensor>
+    <always_on>1</always_on>
+    <visualize>true</visualize>
+  </sensor>
 </link>
 
 <!-- 固定 joint，雷达随无人机移动 -->
