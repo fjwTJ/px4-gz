@@ -52,6 +52,29 @@
             <height>720</height>
             <format>R8G8B8</format>
           </image>
+
+          <lens>
+            <type>gnomonical</type>
+            <scale_to_hfov>true</scale_to_hfov>
+
+            <intrinsics>
+              <fx>1108.5</fx>
+              <fy>1108.5</fy>
+              <cx>640.0</cx>
+              <cy>360.0</cy>
+              <s>0.0</s>
+            </intrinsics>
+
+            <projection>
+              <p_fx>1108.5</p_fx>
+              <p_fy>1108.5</p_fy>
+              <p_cx>640.0</p_cx>
+              <p_cy>360.0</p_cy>
+              <tx>0.0</tx>
+              <ty>0.0</ty>
+            </projection>
+          </lens>
+
           <clip>
             <near>0.1</near>
             <far>30</far>
